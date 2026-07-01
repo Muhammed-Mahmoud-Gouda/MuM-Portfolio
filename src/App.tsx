@@ -390,7 +390,7 @@ function App() {
 
             {/* Main Headline */}
             <h1 className="hero-title">
-              Building robust <span>systems</span> & beautiful user interfaces
+              Architecting scalable <span>backends</span> & seamless web experiences
             </h1>
 
             {/* Description */}
