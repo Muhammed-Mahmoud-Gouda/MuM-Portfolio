@@ -2,7 +2,7 @@
 
 A premium, modern, and highly interactive developer portfolio built with **React**, **TypeScript**, and **Vanilla CSS**. Designed for full-stack software engineers, showcasing clean-code principles, decoupled system architectures, and professional backend/frontend capabilities.
 
-Live Demo: [https://github.com/Muhammed-Mahmoud-Gouda/MuM-Portfolio](https://github.com/Muhammed-Mahmoud-Gouda/MuM-Portfolio)
+Live Demo: [https://muhammed-mg.vercel.app/](https://muhammed-mg.vercel.app/)
 
 ---
 
