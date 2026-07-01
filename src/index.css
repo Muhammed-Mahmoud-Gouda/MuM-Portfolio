@@ -305,6 +305,8 @@ a {
 .hero-buttons {
   display: flex;
   gap: 12px;
+  margin-top: 28px;
+  margin-bottom: 28px;
   @media (max-width: 768px) {
     flex-direction: column;
     width: 100%;
@@ -1891,7 +1893,7 @@ a {
 /* Developer Metrics Bar */
 .metrics-bar {
   max-width: 900px;
-  margin: -60px auto 48px auto;
+  margin: -35px auto 48px auto;
   width: 90%;
   position: relative;
   z-index: 10;
