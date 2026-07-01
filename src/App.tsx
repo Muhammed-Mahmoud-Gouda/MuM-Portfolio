@@ -1045,9 +1045,6 @@ function App() {
             <p className="copyright-text">
               © {new Date().getFullYear()} MuM.Dev. All rights reserved.
             </p>
-            <p className="crafted-text">
-              Crafted with passion using React & CSS.
-            </p>
           </div>
         </div>
       </footer>
