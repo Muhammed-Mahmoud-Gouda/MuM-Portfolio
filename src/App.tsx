@@ -123,18 +123,23 @@ function App() {
   };
 
   useEffect(() => {
-    // Simulate GitHub-style top loading progress bar
-    const timer1 = setTimeout(() => setLoadingProgress(30), 80);
-    const timer2 = setTimeout(() => setLoadingProgress(75), 350);
-    const timer3 = setTimeout(() => setLoadingProgress(100), 700);
-    const timer4 = setTimeout(() => setLoadingVisible(false), 1050);
+    // Slow down counting to 100% for smooth animation observation
+    const interval = setInterval(() => {
+      setLoadingProgress((prev) => {
+        if (prev >= 100) {
+          clearInterval(interval);
+          setTimeout(() => {
+            setLoadingVisible(false);
+          }, 450); // Delay after reaching 100% for fade-out
+          return 100;
+        }
+        // Smaller increments (1 to 4) for a slower, more refined feel
+        const step = Math.floor(Math.random() * 4) + 1;
+        return Math.min(prev + step, 100);
+      });
+    }, 100);
 
-    return () => {
-      clearTimeout(timer1);
-      clearTimeout(timer2);
-      clearTimeout(timer3);
-      clearTimeout(timer4);
-    };
+    return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
@@ -358,11 +363,69 @@ function App() {
 
   return (
     <>
+      {/* Full-Screen Premium .NET Preloader (Light Mode) */}
       {loadingVisible && (
-        <div 
-          className="top-loading-bar" 
-          style={{ width: `${loadingProgress}%` }}
-        />
+        <div className={`preloader-overlay ${loadingProgress === 100 ? 'fade-out' : ''}`}>
+          <div className="preloader-content">
+            <div className="preloader-net-badge">
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="preloader-net-icon">
+                <circle cx="12" cy="12" r="10" fill="#512BD4" />
+                <text x="12" y="15.2" fill="#FFFFFF" fontSize="7" fontWeight="bold" fontFamily="'Inter', system-ui, sans-serif" textAnchor="middle">.NET</text>
+              </svg>
+            </div>
+            
+            <div className="preloader-logo">
+              <span className="preloader-brand">MuM.Dev</span>
+            </div>
+            
+            <div className="preloader-progress-container">
+              <div className="preloader-progress-bar" style={{ width: `${loadingProgress}%` }}></div>
+            </div>
+            
+            <div className="preloader-percentage">{loadingProgress}%</div>
+            <div className="preloader-status">Initializing .NET System...</div>
+
+            {/* Dynamic Sequential Tech Icons */}
+            <div className="preloader-icons-row">
+              <div className={`preloader-icon-item ${loadingProgress >= 20 ? 'active' : ''}`}>
+                <svg viewBox="0 0 24 24" fill="none" className="preloader-mini-icon">
+                  <path d="M12 2L20.66 7V17L12 22L3.34 17V7L12 2Z" fill="#512BD4" />
+                  <path d="M12 2V22L20.66 17V7L12 2Z" fill="#000000" opacity="0.1" />
+                  <path d="M10.5 15.5C8.8 15.5 7.5 14.2 7.5 12s1.3-3.5 3-3.5c1.0 0 1.7.4 2.1.9l-1.2 1.0c-.2-.3-.5-.5-.9-.5-.9 0-1.4.6-1.4 1.9s.5 1.9 1.4 1.9c.4 0 .7-.2.9-.5l1.2 1.0c-.4.5-1.1.8-2.1.8z" fill="#FFFFFF" />
+                  <path d="M15.2 12.5h-1.1v-1.1h1.1V10h1v1.4h1.1v1.1h-1.1v1.4h-1v-1.4zm0-2.5h-1.1v-1.1h1.1V10z" fill="#FFFFFF" />
+                </svg>
+                <span className="preloader-mini-label">C#</span>
+              </div>
+              <div className={`preloader-icon-item ${loadingProgress >= 45 ? 'active' : ''}`}>
+                <svg viewBox="0 0 24 24" fill="none" className="preloader-mini-icon">
+                  <circle cx="12" cy="12" r="10" fill="#512BD4" />
+                  <text x="12" y="15.2" fill="#FFFFFF" fontSize="7" fontWeight="bold" fontFamily="'Inter', system-ui, sans-serif" textAnchor="middle">.NET</text>
+                </svg>
+                <span className="preloader-mini-label">.NET</span>
+              </div>
+              <div className={`preloader-icon-item ${loadingProgress >= 70 ? 'active' : ''}`}>
+                <div className="preloader-mini-icon-img">
+                  <img 
+                    src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/microsoftsqlserver/microsoftsqlserver-original.svg" 
+                    alt="SQL Server" 
+                    style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                  />
+                </div>
+                <span className="preloader-mini-label">SQL DB</span>
+              </div>
+              <div className={`preloader-icon-item ${loadingProgress >= 90 ? 'active' : ''}`}>
+                <div className="preloader-mini-icon-img">
+                  <img 
+                    src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/github/github-original.svg" 
+                    alt="GitHub" 
+                    style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                  />
+                </div>
+                <span className="preloader-mini-label">GitHub</span>
+              </div>
+            </div>
+          </div>
+        </div>
       )}
       {/* Background Decorations (Static & Clean) */}
       <div className="bg-decorations"></div>
