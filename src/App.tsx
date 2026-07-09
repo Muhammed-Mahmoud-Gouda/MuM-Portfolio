@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Navbar } from './components/Navbar';
+import { translations } from './utils/translations';
 import { DeveloperIllustration } from './components/DeveloperIllustration';
 import { TechParticlesBackground } from './components/TechParticlesBackground';
 import './App.css';
@@ -39,7 +40,29 @@ const getSkillGlowColor = (name: string): string => {
   return 'rgba(0, 0, 0, 0.05)';
 };
 
+const getCategoryTitle = (title: string, lang: 'en' | 'ar'): string => {
+  if (title === 'Programming Languages') return lang === 'ar' ? 'لغات البرمجة' : title;
+  if (title === 'Back-End Development') return lang === 'ar' ? 'تقنيات الباك-إند' : title;
+  if (title === 'Front-End Development') return lang === 'ar' ? 'تقنيات الفرونت-إند' : title;
+  if (title === 'Database & Design') return lang === 'ar' ? 'قواعد البيانات والتصميم' : title;
+  if (title === 'Tools & Environments') return lang === 'ar' ? 'الأدوات وبيئات التطوير' : title;
+  if (title === 'Computer Science & Concepts') return lang === 'ar' ? 'مفاهيم برمجية وأساسيات' : title;
+  return title;
+};
+
 function App() {
+  const [lang, setLang] = useState<'en' | 'ar'>(() => {
+    return (localStorage.getItem('portfolio-lang') as 'en' | 'ar') || 'en';
+  });
+  
+  const t = translations[lang];
+
+  useEffect(() => {
+    localStorage.setItem('portfolio-lang', lang);
+    document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+    document.documentElement.lang = lang;
+  }, [lang]);
+
   const [loadingProgress, setLoadingProgress] = useState(0);
   const [loadingVisible, setLoadingVisible] = useState(true);
   const [showScrollTop, setShowScrollTop] = useState(false);
@@ -383,7 +406,7 @@ function App() {
             </div>
             
             <div className="preloader-percentage">{loadingProgress}%</div>
-            <div className="preloader-status">Initializing .NET System...</div>
+            <div className="preloader-status">{t.preloaderStatus}</div>
 
             {/* Dynamic Sequential Tech Icons */}
             <div className="preloader-icons-row">
@@ -392,7 +415,7 @@ function App() {
                   <path d="M12 2L20.66 7V17L12 22L3.34 17V7L12 2Z" fill="#512BD4" />
                   <path d="M12 2V22L20.66 17V7L12 2Z" fill="#000000" opacity="0.1" />
                   <path d="M10.5 15.5C8.8 15.5 7.5 14.2 7.5 12s1.3-3.5 3-3.5c1.0 0 1.7.4 2.1.9l-1.2 1.0c-.2-.3-.5-.5-.9-.5-.9 0-1.4.6-1.4 1.9s.5 1.9 1.4 1.9c.4 0 .7-.2.9-.5l1.2 1.0c-.4.5-1.1.8-2.1.8z" fill="#FFFFFF" />
-                  <path d="M15.2 12.5h-1.1v-1.1h1.1V10h1v1.4h1.1v1.1h-1.1v1.4h-1v-1.4zm0-2.5h-1.1v-1.1h1.1V10z" fill="#FFFFFF" />
+                  <path d="M15.2 12.5h-1.1v-1.1h1.1V10h1v1.4h1.1v1.1h-1.1v-1.4h-1v-1.4zm0-2.5h-1.1v-1.1h1.1V10z" fill="#FFFFFF" />
                 </svg>
                 <span className="preloader-mini-label">C#</span>
               </div>
@@ -434,7 +457,7 @@ function App() {
       <TechParticlesBackground />
 
       {/* Navigation */}
-      <Navbar />
+      <Navbar lang={lang} setLang={setLang} />
 
       {/* Main Container */}
       <main className="main-content">
@@ -448,30 +471,30 @@ function App() {
               <svg viewBox="0 0 24 24" fill="currentColor" width="12" height="12" style={{ color: 'var(--text)' }}>
                 <path d="M12 0L14.6 9.4L24 12L14.6 14.6L12 24L9.4 14.6L0 12L9.4 9.4L12 0Z" />
               </svg>
-              <span>Full-Stack .NET Developer</span>
+              <span>{t.heroRole}</span>
             </div>
 
             {/* Main Headline */}
             <h1 className="hero-title">
-              Architecting scalable <span>backends</span> & seamless web experiences
+              {t.heroTitle1}<span>{t.heroTitleSpan}</span>{t.heroTitle2}
             </h1>
 
             {/* Description */}
             <p className="hero-desc">
-              I specialize in designing scalable backend architectures with C# and .NET Core, paired with interactive, high-performance web applications using React.
+              {t.heroDesc}
             </p>
 
             {/* Action Buttons */}
             <div className="hero-buttons">
               <a href="#contact" className="btn-primary">
-                Get in Touch
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                {t.heroGetInTouch}
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ transform: lang === 'ar' ? 'rotate(180deg)' : 'none' }}>
                   <line x1="5" y1="12" x2="19" y2="12"></line>
                   <polyline points="12 5 19 12 12 19"></polyline>
                 </svg>
               </a>
               <a href="#tech-stack" className="btn-secondary">
-                View My Skills
+                {t.heroViewSkills}
               </a>
             </div>
           </div>
@@ -486,23 +509,23 @@ function App() {
         <div className="metrics-bar animate-on-scroll">
           <div className="metrics-container">
             <div className="metric-item">
-              <span className="metric-number">5+ Layers</span>
-              <span className="metric-label">Decoupled Architecture</span>
+              <span className="metric-number">{t.metricLayersNum}</span>
+              <span className="metric-label">{t.metricLayersLabel}</span>
             </div>
             <div className="metric-divider"></div>
             <div className="metric-item">
-              <span className="metric-number">Clean Code</span>
-              <span className="metric-label">SOLID Principles</span>
+              <span className="metric-number">{t.metricCodeNum}</span>
+              <span className="metric-label">{t.metricCodeLabel}</span>
             </div>
             <div className="metric-divider"></div>
             <div className="metric-item">
-              <span className="metric-number">Optimized DB</span>
-              <span className="metric-label">SQL Server Queries</span>
+              <span className="metric-number">{t.metricDbNum}</span>
+              <span className="metric-label">{t.metricDbLabel}</span>
             </div>
             <div className="metric-divider"></div>
             <div className="metric-item">
-              <span className="metric-number">Background Tasks</span>
-              <span className="metric-label">Hangfire Services</span>
+              <span className="metric-number">{t.metricTasksNum}</span>
+              <span className="metric-label">{t.metricTasksLabel}</span>
             </div>
           </div>
         </div>
@@ -513,13 +536,17 @@ function App() {
             {/* Left: Text Details */}
             <div className="about-content">
               <div className="about-tag">
-                <span>About Me</span>
+                <span>{t.aboutTitle}</span>
               </div>
               <h2 className="about-name">Muhammed Mahmoud Gouda</h2>
-              <h3 className="about-title">.NET Developer</h3>
+              <h3 className="about-title">{t.heroRole}</h3>
               
               <p className="about-objective">
-                Motivated .NET Developer with strong expertise in C#, SQL Server, and object-oriented programming. Skilled in building scalable applications, applying clean code practices, and solving complex problems. Open to contributing technical and analytical skills to innovative software projects.
+                {t.aboutText1}
+              </p>
+
+              <p className="about-objective" style={{ marginTop: '12px' }}>
+                {t.aboutText2}
               </p>
 
               <div style={{ marginBottom: '8px' }}>
@@ -534,7 +561,7 @@ function App() {
                     <polyline points="7 10 12 15 17 10" />
                     <line x1="12" y1="15" x2="12" y2="3" />
                   </svg>
-                  <span>Download CV</span>
+                  <span>{t.aboutDownloadCV}</span>
                 </a>
               </div>
 
@@ -546,14 +573,10 @@ function App() {
                     className="contact-icon" 
                     style={{ width: '16px', height: '16px', objectFit: 'contain' }}
                   />
-                  <span>muhammedmahmoudgoda66@gmail.com</span>
-                </a>
-
-                <a href="tel:+201064665247" className="contact-pill">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="contact-icon">
-                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
-                  </svg>
-                  <span>+201064665247</span>
+                  <div style={{ display: 'flex', flexDirection: 'column' }}>
+                    <span style={{ fontSize: '0.68rem', opacity: 0.6, fontWeight: 600 }}>{t.aboutEmailLabel}</span>
+                    <span>muhammedmahmoudgoda66@gmail.com</span>
+                  </div>
                 </a>
 
                 <a href="https://wa.me/201064665247" target="_blank" rel="noopener noreferrer" className="contact-pill">
@@ -563,7 +586,10 @@ function App() {
                     className="contact-icon" 
                     style={{ width: '16px', height: '16px', objectFit: 'contain' }}
                   />
-                  <span>WhatsApp Chat</span>
+                  <div style={{ display: 'flex', flexDirection: 'column' }}>
+                    <span style={{ fontSize: '0.68rem', opacity: 0.6, fontWeight: 600 }}>{t.aboutPhoneLabel} ({t.aboutInstantChat})</span>
+                    <span>+20 1064665247</span>
+                  </div>
                 </a>
 
                 <div className="contact-pill static">
@@ -571,21 +597,24 @@ function App() {
                     <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
                     <circle cx="12" cy="10" r="3" />
                   </svg>
-                  <span>Egypt</span>
+                  <div style={{ display: 'flex', flexDirection: 'column' }}>
+                    <span style={{ fontSize: '0.68rem', opacity: 0.6, fontWeight: 600 }}>{t.aboutLocationLabel}</span>
+                    <span>{t.aboutLocationValue}</span>
+                  </div>
                 </div>
 
                 <a href="https://linkedin.com/in/muhammad-mahmoud-gouda/" target="_blank" rel="noopener noreferrer" className="contact-pill">
                   <svg viewBox="0 0 24 24" className="contact-icon" xmlns="http://www.w3.org/2000/svg" fill="#0077B5">
                     <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.779-1.75-1.75s.784-1.75 1.75-1.75 1.75.779 1.75 1.75-.784 1.75-1.75 1.75zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
                   </svg>
-                  <span>LinkedIn Profile</span>
+                  <span>{t.aboutLinkedInLabel}</span>
                 </a>
 
                 <a href="https://github.com/Muhammed-Mahmoud-Gouda" target="_blank" rel="noopener noreferrer" className="contact-pill">
                   <svg viewBox="0 0 24 24" className="contact-icon" xmlns="http://www.w3.org/2000/svg" fill="#181717">
                     <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.65.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
                   </svg>
-                  <span>GitHub Profile</span>
+                  <span>{t.aboutGitHubLabel}</span>
                 </a>
               </div>
             </div>
@@ -606,16 +635,16 @@ function App() {
         {/* Tech Stack Section (Dedicated Category Bento Grid) */}
         <section id="tech-stack" className="tech-stack-section animate-on-scroll">
           <div className="section-header">
-            <h2 className="section-title">Tech Stack & Tools</h2>
+            <h2 className="section-title">{t.techTitle}</h2>
             <p className="section-desc">
-              A detailed directory of my programming languages, frameworks, databases, tools, and core computer science concepts.
+              {t.techDesc}
             </p>
           </div>
 
           <div className="tech-categories-grid">
             {techCategories.map((category, idx) => (
               <div key={idx} className="tech-category-card">
-                <h3 className="tech-category-title">{category.title}</h3>
+                <h3 className="tech-category-title">{getCategoryTitle(category.title, lang)}</h3>
                 <div className="tech-skills-list">
                   {category.skills.map((skill, sIdx) => (
                     <div 
@@ -636,9 +665,9 @@ function App() {
         {/* Projects Section */}
         <section id="projects" className="projects-section animate-on-scroll">
           <div className="section-header">
-            <h2 className="section-title">Featured Projects</h2>
+            <h2 className="section-title">{t.projectsTitle}</h2>
             <p className="section-desc">
-              A showcase of my recent backend and full-stack software development projects, demonstrating Clean Architecture, OOP principles, and robust database designs.
+              {t.projectsDesc}
             </p>
           </div>
 
@@ -688,9 +717,9 @@ function App() {
                 </div>
               </div>
               <div className="project-content">
-                <h3 className="project-title">Eventify Pro</h3>
+                <h3 className="project-title">{t.projEventifyTitle}</h3>
                 <p className="project-text">
-                  A role-driven enterprise event management system built on a 5-layer N-Tier architecture. Designed to handle real-world operational challenges such as preventing ticket overselling under highly concurrent user traffic, generating fraud-resistant secure tickets with QR codes, integrating payment gateway with Paymob, and processing background tasks queue using Hangfire.
+                  {t.projEventifyDesc}
                 </p>
                 <div className="project-tech-list">
                   <span className="tech-badge">
@@ -739,7 +768,7 @@ function App() {
                       <svg viewBox="0 0 24 24" className="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
                         <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.65.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
                       </svg>
-                      <span>Code</span>
+                      <span>{t.projCode}</span>
                     </a>
                     <a 
                       href="https://eventifypro.runasp.net" 
@@ -752,7 +781,7 @@ function App() {
                         <polyline points="15 3 21 3 21 9" />
                         <line x1="10" y1="14" x2="21" y2="3" />
                       </svg>
-                      <span>Live Demo</span>
+                      <span>{t.projDemo}</span>
                     </a>
                   </div>
                   <button 
@@ -764,7 +793,7 @@ function App() {
                       <polyline points="2 17 12 22 22 17"></polyline>
                       <polyline points="2 12 12 17 22 12"></polyline>
                     </svg>
-                    <span>System Architecture Diagram</span>
+                    <span>{t.projArch}</span>
                   </button>
                 </div>
               </div>
@@ -815,9 +844,9 @@ function App() {
                 </div>
               </div>
               <div className="project-content">
-                <h3 className="project-title">Patient Management System (PMS)</h3>
+                <h3 className="project-title">{t.projPmsTitle}</h3>
                 <p className="project-text">
-                  A clinical management application built with a decoupled Clean N-Tier Architecture (Domain, Application, Infrastructure, Console). Features database seed structures, clinic scheduler schemas, robust lookup algorithms, and transactional repository design patterns to organize clinical information.
+                  {t.projPmsDesc}
                 </p>
                 <div className="project-tech-list">
                   <span className="tech-badge">
@@ -858,7 +887,7 @@ function App() {
                     <svg viewBox="0 0 24 24" className="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
                       <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.65.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
                     </svg>
-                    <span>Code</span>
+                    <span>{t.projCode}</span>
                   </a>
                 </div>
               </div>
@@ -869,19 +898,19 @@ function App() {
         {/* Contact Me Section */}
         <section id="contact" className="contact-section animate-on-scroll">
           <div className="section-header">
-            <span className="section-tag">Let's Connect</span>
-            <h2 className="section-title">Get In Touch</h2>
+            <span className="section-tag">{t.navContact}</span>
+            <h2 className="section-title">{t.contactTitle}</h2>
             <p className="section-desc">
-              Have an exciting project, a job opportunity, or just want to say hello? Drop me a message and I'll get back to you as soon as possible!
+              {t.contactDesc}
             </p>
           </div>
 
           <div className="contact-container">
             {/* Left: Contact Info / Quick Links */}
             <div className="contact-info-card">
-              <h3 className="contact-info-title">Let's build something together</h3>
+              <h3 className="contact-info-title">{t.contactInfoTitle}</h3>
               <p className="contact-info-text">
-                I'm always open to discussing backend system architectures, new web applications, database designs, or consulting on C# and .NET solutions.
+                {t.contactInfoText}
               </p>
 
               <div className="contact-details-list">
@@ -893,7 +922,7 @@ function App() {
                     </svg>
                   </div>
                   <div className="detail-info">
-                    <span className="detail-label">Email Me</span>
+                    <span className="detail-label">{t.aboutEmailLabel}</span>
                     <span className="detail-value text-break">muhammedmahmoudgoda66@gmail.com</span>
                   </div>
                   <button onClick={handleCopyEmail} className="copy-detail-btn" aria-label="Copy Email">
@@ -917,8 +946,8 @@ function App() {
                     </svg>
                   </div>
                   <div className="detail-info">
-                    <span className="detail-label">WhatsApp Me</span>
-                    <span className="detail-value">Instant Chat (+20 1064665247)</span>
+                    <span className="detail-label">{t.aboutPhoneLabel}</span>
+                    <span className="detail-value">{t.aboutInstantChat} (+20 1064665247)</span>
                   </div>
                   <div className="contact-detail-actions" style={{ display: 'flex', gap: '8px', marginLeft: 'auto' }}>
                     <button 
@@ -963,8 +992,8 @@ function App() {
                     </svg>
                   </div>
                   <div className="detail-info">
-                    <span className="detail-label">Location</span>
-                    <span className="detail-value">Egypt</span>
+                    <span className="detail-label">{t.aboutLocationLabel}</span>
+                    <span className="detail-value">{t.aboutLocationValue}</span>
                   </div>
                 </div>
               </div>
@@ -975,18 +1004,18 @@ function App() {
               <form onSubmit={handleContactSubmit} className="contact-form">
                 <div className="form-row">
                   <div className="form-group">
-                    <label htmlFor="form-name">Your Name</label>
+                    <label htmlFor="form-name">{t.formName}</label>
                     <input 
                       type="text" 
                       id="form-name" 
                       required 
                       value={contactData.name} 
                       onChange={(e) => setContactData({ ...contactData, name: e.target.value })}
-                      placeholder="Muhammed Mahmoud"
+                      placeholder={lang === 'ar' ? "محمد محمود" : "Muhammed Mahmoud"}
                     />
                   </div>
                   <div className="form-group">
-                    <label htmlFor="form-email">Your Email</label>
+                    <label htmlFor="form-email">{t.formEmail}</label>
                     <input 
                       type="email" 
                       id="form-email" 
@@ -999,30 +1028,28 @@ function App() {
                 </div>
 
                 <div className="form-group">
-                  <label htmlFor="form-subject">Subject</label>
+                  <label htmlFor="form-subject">{t.formSubject}</label>
                   <input 
                     type="text" 
                     id="form-subject" 
                     required 
                     value={contactData.subject} 
                     onChange={(e) => setContactData({ ...contactData, subject: e.target.value })}
-                    placeholder="Project Inquiry / Job Opportunity"
+                    placeholder={lang === 'ar' ? "طلب مشروع / فرصة عمل" : "Project Inquiry / Job Opportunity"}
                   />
                 </div>
 
                 <div className="form-group">
-                  <label htmlFor="form-message">Message</label>
+                  <label htmlFor="form-message">{t.formMessage}</label>
                   <textarea 
                     id="form-message" 
                     rows={5} 
                     required 
                     value={contactData.message} 
                     onChange={(e) => setContactData({ ...contactData, message: e.target.value })}
-                    placeholder="Write your message details here..."
+                    placeholder={lang === 'ar' ? "اكتب تفاصيل رسالتك هنا..." : "Write your message details here..."}
                   ></textarea>
                 </div>
-
-
 
                 {contactError && (
                   <div className="contact-alert error">
@@ -1032,8 +1059,8 @@ function App() {
                       <line x1="9" y1="9" x2="15" y2="15"></line>
                     </svg>
                     <div>
-                      <strong>Failed to send message!</strong>
-                      <p style={{ margin: '2px 0 0 0', fontSize: '0.82rem' }}>Please try again or contact me directly via email.</p>
+                      <strong>{lang === 'ar' ? "فشل إرسال الرسالة!" : "Failed to send message!"}</strong>
+                      <p style={{ margin: '2px 0 0 0', fontSize: '0.82rem' }}>{lang === 'ar' ? "يرجى المحاولة مرة أخرى أو الاتصال بي مباشرة عبر البريد الإلكتروني." : "Please try again or contact me directly via email."}</p>
                     </div>
                   </div>
                 )}
@@ -1046,15 +1073,15 @@ function App() {
                   {contactSending ? (
                     <>
                       <div className="spinner"></div>
-                      <span>Sending Message...</span>
+                      <span>{t.formSending}</span>
                     </>
                   ) : (
                     <>
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="btn-icon" style={{ width: '15px', height: '15px' }}>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="btn-icon" style={{ width: '15px', height: '15px', transform: lang === 'ar' ? 'rotate(180deg)' : 'none' }}>
                         <line x1="22" y1="2" x2="11" y2="13"></line>
                         <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
                       </svg>
-                      <span>Send Message</span>
+                      <span>{t.formSend}</span>
                     </>
                   )}
                 </button>
@@ -1077,11 +1104,11 @@ function App() {
 
             {/* Center: Navigation links */}
             <div className="footer-nav">
-              <a href="#home" className="footer-link">Home</a>
-              <a href="#about" className="footer-link">About</a>
-              <a href="#tech-stack" className="footer-link">Skills</a>
-              <a href="#projects" className="footer-link">Projects</a>
-              <a href="#contact" className="footer-link">Contact</a>
+              <a href="#home" className="footer-link">{t.navHome}</a>
+              <a href="#about" className="footer-link">{t.navAbout}</a>
+              <a href="#tech-stack" className="footer-link">{t.navSkills}</a>
+              <a href="#projects" className="footer-link">{t.navProjects}</a>
+              <a href="#contact" className="footer-link">{t.navContact}</a>
             </div>
 
             {/* Right: Social icons */}
@@ -1104,9 +1131,12 @@ function App() {
             </div>
           </div>
 
-          <div className="footer-bottom">
+          <div className="footer-bottom" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
             <p className="copyright-text">
-              © {new Date().getFullYear()} MuM.Dev. All rights reserved.
+              © {new Date().getFullYear()} {t.footerCopyright}
+            </p>
+            <p className="copyright-text" style={{ opacity: 0.7 }}>
+              {t.footerCrafted}
             </p>
           </div>
         </div>
@@ -1141,18 +1171,18 @@ function App() {
       {/* Premium Success Modal */}
       {contactSuccess && (
         <div className="success-modal-overlay">
-          <div className="success-modal">
+          <div className="success-modal animate-scale-up">
             <div className="success-modal-icon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" className="checkmark-svg">
                 <polyline points="20 6 9 17 4 12"></polyline>
               </svg>
             </div>
-            <h3 className="success-modal-title">Message Sent!</h3>
+            <h3 className="success-modal-title">{t.successSent}</h3>
             <p className="success-modal-text">
-              Thank you! Muhammed has received your message. If this is your first time, check your inbox for the FormSubmit activation link!
+              {t.successSentDesc}
             </p>
             <button className="success-modal-close" onClick={() => setContactSuccess(false)}>
-              Close
+              {t.close}
             </button>
           </div>
         </div>
@@ -1170,9 +1200,9 @@ function App() {
             </button>
 
             <div className="arch-modal-header">
-              <h3 className="arch-modal-title">Eventify Pro System Architecture</h3>
+              <h3 className="arch-modal-title">{t.archModalTitle}</h3>
               <p className="arch-modal-desc">
-                Interactive representation of the 5-Layer N-Tier Architecture. Each layer operates with decoupled dependencies.
+                {t.archModalSub}
               </p>
             </div>
 
@@ -1180,15 +1210,15 @@ function App() {
               {/* Layer 1 */}
               <div className="arch-layer-card web-layer">
                 <div className="layer-num-badge">Layer 1</div>
-                <h4 className="layer-title">Presentation / Web Layer</h4>
-                <p className="layer-summary">Handles HTTP requests, client-side views, and controller routing.</p>
+                <h4 className="layer-title">{t.layer1Title}</h4>
+                <p className="layer-summary">{t.layer1Summary}</p>
                 <div className="layer-details">
-                  <strong>Tech Stack:</strong> ASP.NET Core MVC 8, Razor Views, React Frontend, ViewModels, Controllers.
+                  <strong>Tech Stack:</strong> {t.layer1Tech}
                 </div>
               </div>
 
               <div className="flow-arrow">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="arrow-down-svg">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="arrow-down-svg" style={{ transform: lang === 'ar' ? 'rotate(180deg)' : 'none' }}>
                   <line x1="12" y1="5" x2="12" y2="19"></line>
                   <polyline points="19 12 12 19 5 12"></polyline>
                 </svg>
@@ -1197,15 +1227,15 @@ function App() {
               {/* Layer 2 */}
               <div className="arch-layer-card bll-layer">
                 <div className="layer-num-badge">Layer 2</div>
-                <h4 className="layer-title">Business Logic Layer (BLL)</h4>
-                <p className="layer-summary">Coordinates domain models, enforces validations, manages payments, and queues background jobs.</p>
+                <h4 className="layer-title">{t.layer2Title}</h4>
+                <p className="layer-summary">{t.layer2Summary}</p>
                 <div className="layer-details">
-                  <strong>Tech Stack:</strong> Hangfire Queue Services, Paymob API Integration Services, Business Rules, Validation Engines.
+                  <strong>Tech Stack:</strong> {t.layer2Tech}
                 </div>
               </div>
 
               <div className="flow-arrow">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="arrow-down-svg">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="arrow-down-svg" style={{ transform: lang === 'ar' ? 'rotate(180deg)' : 'none' }}>
                   <line x1="12" y1="5" x2="12" y2="19"></line>
                   <polyline points="19 12 12 19 5 12"></polyline>
                 </svg>
@@ -1214,15 +1244,15 @@ function App() {
               {/* Layer 3 */}
               <div className="arch-layer-card dal-layer">
                 <div className="layer-num-badge">Layer 3</div>
-                <h4 className="layer-title">Data Access Layer (DAL)</h4>
-                <p className="layer-summary">Handles persistent storage read/write queries and repository configurations.</p>
+                <h4 className="layer-title">{t.layer3Title}</h4>
+                <p className="layer-summary">{t.layer3Summary}</p>
                 <div className="layer-details">
-                  <strong>Tech Stack:</strong> Entity Framework Core 8, DbContext, Migrations, Repository Patterns, SQL Server Client.
+                  <strong>Tech Stack:</strong> {t.layer3Tech}
                 </div>
               </div>
 
               <div className="flow-arrow">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="arrow-down-svg">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="arrow-down-svg" style={{ transform: lang === 'ar' ? 'rotate(180deg)' : 'none' }}>
                   <line x1="12" y1="5" x2="12" y2="19"></line>
                   <polyline points="19 12 12 19 5 12"></polyline>
                 </svg>
@@ -1231,15 +1261,15 @@ function App() {
               {/* Layer 4 */}
               <div className="arch-layer-card domain-layer">
                 <div className="layer-num-badge">Layer 4</div>
-                <h4 className="layer-title">Domain / Entities Layer</h4>
-                <p className="layer-summary">Contains central database tables, schemas, core constraints, and user roles.</p>
+                <h4 className="layer-title">{t.layer4Title}</h4>
+                <p className="layer-summary">{t.layer4Summary}</p>
                 <div className="layer-details">
-                  <strong>Entities:</strong> Event, Ticket, Booking, User, Role. (Independent layer referenced by all).
+                  <strong>Entities:</strong> {t.layer4Tech}
                 </div>
               </div>
 
               <div className="flow-arrow">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="arrow-down-svg">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="arrow-down-svg" style={{ transform: lang === 'ar' ? 'rotate(180deg)' : 'none' }}>
                   <line x1="12" y1="5" x2="12" y2="19"></line>
                   <polyline points="19 12 12 19 5 12"></polyline>
                 </svg>
@@ -1248,10 +1278,10 @@ function App() {
               {/* Layer 5 */}
               <div className="arch-layer-card shared-layer">
                 <div className="layer-num-badge">Layer 5</div>
-                <h4 className="layer-title">Shared Infrastructure Layer</h4>
-                <p className="layer-summary">Supplies cross-cutting helpers, logging, security encoders, and app configurations.</p>
+                <h4 className="layer-title">{t.layer5Title}</h4>
+                <p className="layer-summary">{t.layer5Summary}</p>
                 <div className="layer-details">
-                  <strong>Tech Stack:</strong> Serilog Logger, Cryptography Encoders, Constants, JSON Config Utilities.
+                  <strong>Tech Stack:</strong> {t.layer5Tech}
                 </div>
               </div>
             </div>
@@ -1263,9 +1293,9 @@ function App() {
       {showQrModal && (
         <div className="success-modal-overlay" onClick={() => setShowQrModal(false)}>
           <div className="success-modal animate-scale-up" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '360px', padding: '30px 24px' }}>
-            <h3 className="success-modal-title" style={{ fontSize: '1.25rem' }}>Scan to Chat</h3>
+            <h3 className="success-modal-title" style={{ fontSize: '1.25rem' }}>{t.preloaderScan}</h3>
             <p className="success-modal-text" style={{ fontSize: '0.85rem' }}>
-              Scan this QR code with your phone camera to start a chat with Muhammed instantly.
+              {t.preloaderScanDesc}
             </p>
             <div className="qr-container" style={{ margin: '15px 0', padding: '16px', backgroundColor: '#F8F9FA', borderRadius: '16px', border: '1px solid var(--border)' }}>
               <img 
@@ -1275,7 +1305,7 @@ function App() {
               />
             </div>
             <button className="success-modal-close" onClick={() => setShowQrModal(false)}>
-              Close
+              {t.close}
             </button>
           </div>
         </div>

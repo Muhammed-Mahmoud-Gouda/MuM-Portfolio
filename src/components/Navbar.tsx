@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from 'react';
+import { translations } from '../utils/translations';
 
-export const Navbar: React.FC = () => {
+interface NavbarProps {
+  lang: 'en' | 'ar';
+  setLang: (lang: 'en' | 'ar') => void;
+}
+
+export const Navbar: React.FC<NavbarProps> = ({ lang, setLang }) => {
+  const t = translations[lang];
   const [isOpen, setIsOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
 
@@ -60,18 +67,47 @@ export const Navbar: React.FC = () => {
 
       <div className={`nav-links-wrapper ${isOpen ? 'open' : ''}`}>
         <div className="nav-links">
-          <a href="#home" className={`nav-link ${activeSection === 'home' ? 'active' : ''}`} onClick={() => setIsOpen(false)}>Home</a>
-          <a href="#about" className={`nav-link ${activeSection === 'about' ? 'active' : ''}`} onClick={() => setIsOpen(false)}>About</a>
-          <a href="#tech-stack" className={`nav-link ${activeSection === 'tech-stack' ? 'active' : ''}`} onClick={() => setIsOpen(false)}>Skills</a>
-          <a href="#projects" className={`nav-link ${activeSection === 'projects' ? 'active' : ''}`} onClick={() => setIsOpen(false)}>Projects</a>
-          <a href="#contact" className={`nav-link ${activeSection === 'contact' ? 'active' : ''}`} onClick={() => setIsOpen(false)}>Contact</a>
+          <a href="#home" className={`nav-link ${activeSection === 'home' ? 'active' : ''}`} onClick={() => setIsOpen(false)}>{t.navHome}</a>
+          <a href="#about" className={`nav-link ${activeSection === 'about' ? 'active' : ''}`} onClick={() => setIsOpen(false)}>{t.navAbout}</a>
+          <a href="#tech-stack" className={`nav-link ${activeSection === 'tech-stack' ? 'active' : ''}`} onClick={() => setIsOpen(false)}>{t.navSkills}</a>
+          <a href="#projects" className={`nav-link ${activeSection === 'projects' ? 'active' : ''}`} onClick={() => setIsOpen(false)}>{t.navProjects}</a>
+          <a href="#contact" className={`nav-link ${activeSection === 'contact' ? 'active' : ''}`} onClick={() => setIsOpen(false)}>{t.navContact}</a>
         </div>
 
         <div className="nav-actions">
+          {/* Language Switch Button */}
+          <button 
+            onClick={() => setLang(lang === 'en' ? 'ar' : 'en')}
+            className="lang-toggle-btn"
+            style={{ 
+              background: 'transparent',
+              border: '1px solid var(--border)',
+              borderRadius: '100px',
+              padding: '8px 16px',
+              fontSize: '0.8rem',
+              fontWeight: '700',
+              cursor: 'pointer',
+              color: 'var(--text)',
+              marginRight: lang === 'en' ? '12px' : '0',
+              marginLeft: lang === 'ar' ? '12px' : '0',
+              transition: 'background-color 0.2s, border-color 0.2s',
+            }}
+            onMouseOver={(e) => {
+              (e.currentTarget as HTMLButtonElement).style.backgroundColor = 'var(--bg-darker)';
+              (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--border-dark)';
+            }}
+            onMouseOut={(e) => {
+              (e.currentTarget as HTMLButtonElement).style.backgroundColor = 'transparent';
+              (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--border)';
+            }}
+          >
+            {lang === 'en' ? 'العربية' : 'English'}
+          </button>
+
           {/* CTA Button */}
           <a href="#contact" className="btn-primary" onClick={() => setIsOpen(false)}>
-            Let's Talk
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            {t.navCTA}
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ transform: lang === 'ar' ? 'rotate(180deg)' : 'none' }}>
               <line x1="5" y1="12" x2="19" y2="12"></line>
               <polyline points="12 5 19 12 12 19"></polyline>
             </svg>
